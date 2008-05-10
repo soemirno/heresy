@@ -6,6 +6,7 @@ class Application
   
   def handle(req, res)
     session_cookie = req.cookies.detect{|c| c.name == "heresy"}
+    
     if(session_cookie)
       session = @@sessions.find(session_cookie.value)
     end
