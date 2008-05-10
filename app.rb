@@ -38,8 +38,9 @@ class Application
 end 
   
 class Canvas 
-  def initialize
+  def initialize(cbs)
     @io = StringIO.new
+    @callbacks = cbs
   end
   
   def tag(name, attrs = {}, &proc)
@@ -55,6 +56,15 @@ class Canvas
     @io << str
   end
   
+  def link(name, &proc)
+    id = @callbacks.register(proc)
+    tag("a", { :href=>"?#{id}"} ) { text(name) }
+  end
+      
+  def space
+    @io << " "
+  end
+        
   def heading(txt, level = 1)
     tag("h#{level}"){text(txt)}
   end
@@ -64,23 +74,39 @@ class Canvas
   end
 end
 
-class Session 
+class Counter 
   def initialize
     @count = 0 
   end 
-      
-  def handle(req, res)
-    @count += 1
-    
-    html = Canvas.new
-    render_on(html)
+  
+  def render_on(html) 
+    html.heading("Hello World: #{@count}") 
+    html.tag("p"){html.text("this is fun!!!")}
+    html.link("--"){ @count -= 1 } 
+    html.space 
+    html.link("++"){ @count += 1 } 
+  end 
+end
+
+class Session
+  
+  def initialize 
+    @callbacks = Registry.new 
+    @root = Counter.new 
+  end 
+  
+  def handle(req, res)    
+    req.query.each do |k,v|
+      if callback = @callbacks.find(k)
+        callback.call(v)
+      end
+    end
+
+    html = Canvas.new(@callbacks)
+    @root.render_on(html)
     
     res.body = html.string
     res["Content-Type"] = "text/html"
-  end
-  
-  def render_on(html)
-    html.heading("Hello World: #{@count}")
   end
 end
 
