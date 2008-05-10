@@ -11,18 +11,16 @@ describe Application, "when handling requests" do
   end
 
   before(:each) do
-    @cookie = mock("cookie")
-    @registry = mock("Registry", :register => "new_key", :create_cookie => @cookie)
+
     @session = mock("session")
     @session.stub!("handle")
-    Session.stub!(:new).and_return(@session)
-    @cookies = mock("cookies", :detect => nil)
-    @cookies.stub!("<<")
-    @req = mock("request", :cookies => @cookies)
-    @res = mock("response", :cookies => @cookies)
-    @session_cookie = mock("session_cookie", :value => "key")
-    Application.registry = @registry
+    @registry = mock("Registry", :match_session => nil, :create_new_session => @session)
 
+    @req = mock("request")
+    @res = mock("response")
+    @session_cookie = mock("session_cookie", :value => "key")
+
+    Application.registry = @registry
     @application = Application.new
   end
 
@@ -30,29 +28,14 @@ describe Application, "when handling requests" do
     @application.handle(@req, @res)
   end
 
-  it "should create session if it doesn't exist" do
-    Session.should_receive("new").and_return(@session)
+  it "shoud create session if not exist" do
+    @registry.should_receive("create_new_session").with(@res).and_return(@session)
     handle_request
   end
 
-  it "should register newly created session" do
-    @registry.should_receive("register").with(@session)
-    handle_request
-  end
-
-  it "should store session id in new cookie" do
-    @registry.should_receive("create_cookie").with("heresy","new_key")
-    handle_request
-  end
-  
-  it "should store session id to response" do
-    @cookies.should_receive("<<").with(@cookie)
-    handle_request
-  end
-
-  it "shoud retrieve existing session" do
-    @cookies.stub!(:detect).and_return(@session_cookie)
-    @registry.should_receive("find").with("key")
+  it "shoud match session to request if exist" do
+    @registry.should_receive("match_session").with(@req).and_return(@session)
+    @registry.should_not_receive("create_new_session")
     handle_request
   end
 

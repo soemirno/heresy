@@ -17,4 +17,15 @@ class Registry
   def create_cookie(name, value)
     WEBrick::Cookie.new(name, value)
   end
+  
+  def match_session(request)
+    session_cookie = request.cookies.detect{|c| c.name == "heresy"}
+    session = find(session_cookie.value) if session_cookie    
+  end
+  
+  def create_new_session(response)
+    session = Session.new
+    session_key = register(session)
+    response.cookies << create_cookie("heresy", session_key)
+  end
 end
