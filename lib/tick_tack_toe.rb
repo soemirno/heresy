@@ -32,17 +32,17 @@ class TickTackToe
       @result = "#{row[1]} won"
     end
     }
-    
+
     3.times {|col|
       if @board[0][col] != "." && (@board[0][col] == @board[1][col]) && (@board[0][col] == @board[2][col])
         @result = "#{@board[0][col]} won"
       end
     }
-    
+
     if @board[0][0] != "." && (@board[0][0] == @board[1][1]) && (@board[0][0] == @board[2][2])
       @result = "#{@board[0][0]} won"
     end
-    
+
     if @board[0][2] != "." && (@board[0][2] == @board[1][1]) && (@board[0][2] == @board[2][0])
       @result = "#{@board[0][2]} won"
     end

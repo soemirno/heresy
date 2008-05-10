@@ -9,10 +9,10 @@ describe Application, "when handling requests" do
       @@sessions = registry
     end
   end
-  
+
   before(:each) do
 
-    @registry = mock("Registry", :register => "new_key")    
+    @registry = mock("Registry", :register => "new_key")
     @session = mock("session")
     @session.stub!("handle")
     Session.stub!(:new).and_return(@session)
@@ -22,38 +22,38 @@ describe Application, "when handling requests" do
     @res = mock("response", :cookies => @cookies)
     @session_cookie = mock("session_cookie", :value => "key")
     Application.registry = @registry
-    
+
     @application = Application.new
   end
 
   def handle_request
     @application.handle(@req, @res)
   end
-  
+
   it "should create session if it doesn't exist" do
     Session.should_receive("new").and_return(@session)
     handle_request
   end
-  
+
   it "should register newly created session" do
     @registry.should_receive("register").with(@session)
     handle_request
   end
-  
+
   it "should store session id to response" do
     @cookies.should_receive("<<")
     handle_request
   end
-  
+
   it "shoud retrieve existing session" do
     @cookies.stub!(:detect).and_return(@session_cookie)
-    @registry.should_receive("find").with("key")  
+    @registry.should_receive("find").with("key")
     handle_request
   end
-  
+
   it "should let session handle request" do
     @session.should_receive("handle").with(@req, @res)
     handle_request
   end
-  
+
 end
