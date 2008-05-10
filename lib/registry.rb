@@ -1,3 +1,5 @@
+require 'webrick'
+
 class Registry
   def initialize
     @items = []
@@ -10,5 +12,9 @@ class Registry
 
   def find(key)
     @items[key.to_i]
+  end
+  
+  def create_cookie(name, value)
+    WEBrick::Cookie.new(name, value)
   end
 end

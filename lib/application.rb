@@ -19,12 +19,8 @@ private
   def create_new_session(res)
     session = Session.new
     session_key = @@sessions.register(session)
-    res.cookies << create_cookie("heresy", session_key)
+    res.cookies << @@sessions.create_cookie("heresy", session_key)
     return session
-  end
-
-  def create_cookie(name, key)
-    WEBrick::Cookie.new(name, key)
   end
 
 end
