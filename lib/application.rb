@@ -1,6 +1,4 @@
-require 'stringio'
 require 'registry'
-require 'canvas'
 require 'session'
 
 class Application
