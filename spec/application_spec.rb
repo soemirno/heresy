@@ -12,7 +12,7 @@ describe Application, "when handling requests" do
   
   before(:each) do
 
-    @registry = mock("Registry", :register => "")    
+    @registry = mock("Registry", :register => "new_key")    
     @session = mock("session")
     @session.stub!("handle")
     Session.stub!(:new).and_return(@session)
@@ -37,6 +37,11 @@ describe Application, "when handling requests" do
   
   it "should register newly created session" do
     @registry.should_receive("register").with(@session)
+    handle_request
+  end
+  
+  it "should store session id to response" do
+    @cookies.should_receive("<<")
     handle_request
   end
   
