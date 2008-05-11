@@ -1,8 +1,8 @@
-require 'registry'
+require 'session_store'
 require 'session'
 
 class Application
-  @@sessions = Registry.new
+  @@sessions = SessionStore.new
 
   def handle(req, res)
     session = @@sessions.find_or_create_session(req, res)

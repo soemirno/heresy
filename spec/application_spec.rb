@@ -14,7 +14,7 @@ describe Application, "when handling requests" do
 
     @session = mock("session")
     @session.stub!("handle")
-    @registry = mock("Registry", :find_or_create_session => @session)
+    @registry = mock("Session store", :find_or_create_session => @session)
 
     @req = mock("request")
     @res = mock("response")

@@ -1,5 +1,6 @@
 require 'tick_tack_toe'
 require 'canvas'
+require 'registry'
 
 class Session
 
