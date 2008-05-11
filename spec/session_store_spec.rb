@@ -41,11 +41,6 @@ describe SessionStore, "when looking up sessions" do
     create
   end
 
-  it "should register session to server" do
-    create
-    @registry.find("2").should == @session
-  end
-
   it "should put session reference in response" do
     @cookies.should_receive("<<")
     create
