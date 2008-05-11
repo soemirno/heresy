@@ -14,11 +14,10 @@ describe Application, "when handling requests" do
 
     @session = mock("session")
     @session.stub!("handle")
-    @registry = mock("Registry", :match_session => nil, :create_new_session => @session)
+    @registry = mock("Registry", :find_or_create_session => @session)
 
     @req = mock("request")
     @res = mock("response")
-    @session_cookie = mock("session_cookie", :value => "key")
 
     Application.registry = @registry
     @application = Application.new
@@ -28,14 +27,8 @@ describe Application, "when handling requests" do
     @application.handle(@req, @res)
   end
 
-  it "shoud create session if not exist" do
-    @registry.should_receive("create_new_session").with(@res).and_return(@session)
-    handle_request
-  end
-
   it "shoud match session to request if exist" do
-    @registry.should_receive("match_session").with(@req).and_return(@session)
-    @registry.should_not_receive("create_new_session")
+    @registry.should_receive("find_or_create_session").with(@req, @res).and_return(@session)
     handle_request
   end
 

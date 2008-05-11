@@ -5,8 +5,7 @@ class Application
   @@sessions = Registry.new
 
   def handle(req, res)
-    session = @@sessions.match_session(req)
-    session = @@sessions.create_new_session(res) unless session
+    session = @@sessions.find_or_create_session(req, res)
     session.handle(req, res)
   end
 
