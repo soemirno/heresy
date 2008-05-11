@@ -23,7 +23,7 @@ private
     response["Content-Type"] = "text/html"  
   end
   
-  def process_requestx(request)
+  def process_request(request)
     request.query.each do |k,v|
       if callback = @callbacks.find(k)
         callback.call(v)

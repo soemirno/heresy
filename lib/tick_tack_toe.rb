@@ -1,6 +1,11 @@
 class TickTackToe
+  
   def initialize
-    @board = [[".",".","."],[".",".","."],[".",".","."]]
+    @board = [
+      [".",".","."],
+      [".",".","."],
+      [".",".","."]
+    ]
     @turn = "X"
     @result = ""
   end
@@ -8,18 +13,21 @@ class TickTackToe
   def render_on(html)
     html.heading("Tick Tack Toe")
     html.tag("p"){html.link("start") {initialize}}
-      html.tag("table") {
-        3.times { |row|
+
+    html.tag("table") {
+      3.times { |row|
         html.tag("tr") {
           3.times { |col|
-          html.tag("td") {
-            html.link(@board[row][col]) { do_turn(row, col) }
+            html.tag("td") {
+              html.link(@board[row][col]) { do_turn(row, col) }
             }
           }
         }
       }
     }
+    
     html.tag("p"){html.text(@result)}
+  
   end
 
   def do_turn(row, col)
